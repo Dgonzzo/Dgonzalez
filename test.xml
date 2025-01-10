@@ -1,0 +1,10 @@
+<data>
+    <name>Some name</name>
+    <age>18</age>
+    <birth_date>12-04-2002</birth_date>
+    <programing_languages>
+        <item>Python</item>
+        <item>Cpp</item>
+        <item>Javascript</item>
+    </programing_languages>
+</data>

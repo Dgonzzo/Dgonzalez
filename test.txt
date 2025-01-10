@@ -1,0 +1,4 @@
+name: Some name
+age: 18
+birth_date: 12-04-2002
+programing_languages: ['Python', 'Cpp', 'Javascript']
