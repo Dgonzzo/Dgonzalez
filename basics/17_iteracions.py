@@ -7,7 +7,6 @@ DIFICULTAT EXTRA (Puntua si el resols tot sol):
 '''
 
 # For
-
 for n in range(1, 11):
     print(n)
 
