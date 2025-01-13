@@ -47,7 +47,8 @@ session1.get_user()
 
 # Extra
 
-class Shop_basket():
+class Shop_basket:
+    basket = []
     _instance = None
 
     def __new__(cls):
@@ -55,4 +56,18 @@ class Shop_basket():
             cls._instance = super(UserSession, cls).__new__(cls)
         return cls._instance
     
+    def add_product(self, product):
+        self.basket.append(product)
     
+    def del_product(self, product): 
+        self.basket.remove(product)
+        '''
+        i = 0
+        for element in self.basket: 
+            if product == element:
+                del self.basket[i]
+            else:
+                i += 1
+        '''
+    def pay_basket(self, basket):
+        self.basket.clear()
