@@ -39,7 +39,3 @@ def example2():
 @call_counter
 def example3():
     pass
-
-while True:
-    example1()
-    example2()
