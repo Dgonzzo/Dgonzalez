@@ -15,7 +15,7 @@ def log_time(function):
         start_time = time.time()
         function(*args, **kargs)
         end_time = time.time()
-        logging.info(f'Executed time of {function.__name__}: {int(end_time - start_time)}s')
+        logging.info(f'Executed time of {function.__name__}: {end_time - start_time}s')
         return function
     return time_function
 
