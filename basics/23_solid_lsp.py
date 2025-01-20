@@ -1,19 +1,19 @@
 '''From class'''
 # Incorrect
 
-class Bird:
-    def fly(self):
-        print('Flying')
+# class Bird:
+#     def fly(self):
+#         print('Flying')
 
-class Chicken(Bird):
-    def fly(self):
-        raise Exception('No flying')
+# class Chicken(Bird):
+#     def fly(self):
+#         raise Exception('No flying')
 
-bird = Bird()
-bird.fly()
+# bird = Bird()
+# bird.fly()
 
-chicken = Chicken()
-chicken.fly()
+# chicken = Chicken()
+# chicken.fly()
 
 
 
