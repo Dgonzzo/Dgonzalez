@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 
-class PhysicalBookInterface(ABC):
-    @abstractmethod
-    def borrowable(self):
-        pass
+# class Borrowable(ABC):
+#     @abstractmethod
+#     def borrow(self):
+#         pass
 
-class EBookInterface(ABC):
+class FormatBookInterface(ABC):
     @abstractmethod
-    def borrowable(self):
+    def borrow(self):
         pass
 
 class DatabaseInterface(ABC):
@@ -44,12 +44,31 @@ class ReportGeneratorInterface(ABC):
     def print_ebooks(self):
         pass
 
+    @abstractmethod
+    def borrow(self, book):
+        pass
 
-class Book():
-    def __init__(self, title, author, status):
+    @abstractmethod
+    def return_book(self, book):
+        pass
+
+class Book(FormatBookInterface):
+    def __init__(self, title, author, status, book_type):
         self.title = title
         self.author = author
         self.status = status
+        self.book_type = book_type
+    
+    # def format(self):
+    #     if 'Ebook' == self.book_type:
+    #         return False
+    #     else:
+    #         return True 
+    
+    def borrow(self):
+        if self.book_type == 'Physical':
+            return True
+        return False
 
 class Library(DatabaseInterface, ReportGeneratorInterface):
     def __init__(self):
@@ -68,24 +87,64 @@ class Library(DatabaseInterface, ReportGeneratorInterface):
     # Report Interface
     def print_available(self):
         print('All available books')
-        for k,v in self.inventory:
-            if 'Available' == v.status:
-                print(f'# {k}')
+        for book in self.inventory.values():
+            if 'Available' == book.status:
+                print(f'# {book.title}')
     
-    def print_available(self):
+    def print_borrowed(self):
         print('All borrowed books')
-        for k,v in self.inventory:
-            if 'Not Available' == v.status:
-                print(f'# {k}')
+        for book in self.inventory.values():
+            if 'Not Available' == book.status:
+                print(f'# {book.title}')
     
     def print_all(self):
         print('All books')
-        for k in self.inventory:
-            print(f'# {k}')
+        for book in self.inventory.values():
+            print(f'# {book.title}')
     
     def print_ebooks(self):
-        pass
+        print('All ebooks')
+        for book in self.inventory.values():
+            if 'Ebook' == book.book_type:
+                print(f'# {book.title}')
 
     def print_physical(self):
-        pass
+        print('All physical books')
+        for book in self.inventory.values():
+            if 'Physical' == book.book_type:
+                print(f'# {book.title}')
+
+    def borrow(self, book:Book):
+        if book.borrow() and 'Available' == book.status:
+            self.change_status(book, 'Not Available')
+        else:
+            print(f'{book.title} is not borrowable')
     
+    def return_book(self, book:Book):
+        if 'Not Available' == book.status and book.borrow():
+            self.change_status(book, 'Available')
+        if 'Available' == book.status and book.borrow():
+            print(f'{book.title} was already returned')
+        else:
+            print(f'{book.title} is not borrowable')
+
+my_library = Library()
+
+book1 = Book('The Hobbit', 'J.R.R. Tolkien', 'Available', 'Physical')
+my_library.save(book1)
+
+my_library.print_all()
+
+my_library.print_physical()
+
+my_library.print_available()
+
+my_library.borrow(book1)
+
+my_library.print_available()
+my_library.print_borrowed()
+
+book2 = Book('The Lord of the Rings', 'J.R.R. Tolkien', 'Available', 'Ebook')
+my_library.save(book2)
+
+my_library.print_all()
