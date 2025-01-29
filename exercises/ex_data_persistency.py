@@ -2,327 +2,126 @@ import xml.etree.ElementTree as xml
 import os
 import time
 import datetime
+from abc import ABC, abstractmethod
 
-time.sleep(2)
-print('Hello, welcome to the inventory system')
+class ReportGeneratorInterface(ABC):
+    @abstractmethod
+    def generate(self, books):
+        pass
 
-# import xml.etree.ElementTree as xml
-# import os
-# # from colorama import Fore, init, Back, Style
-# # init()
+class Book():
+    def __init__(self, title, author, released_date:datetime, genre, age_clasification, language, isbn, price):
+        self.title = title
+        self.author = author
+        self.released_date = released_date
+        self.genre = genre
+        self.age_clasification = age_clasification
+        self.language = language
+        self.isbn = isbn
+        self.price = price
 
-# '''
-# These are variable that can be modified according to the user's likings.
-# '''
-# user_os = 'Unix' # Change manually here your OS
-# file_name = 'inventory.xml' # Change the value of this variable in order to change the default name
+    def change_author(self, new_author):
+        self.author = new_author
+    
+    def release_date(self, new_date):
+        self.released_date = new_date
 
+    def change_genre(self, new_genre):
+        self.genre = new_genre
+    
+    def change_age_clasification(self, new_age_clasification):
+        self.age_clasification = new_age_clasification
+    
+    def change_language(self, new_language):
+        self.language = new_language
+    
+    def change_isbn(self, new_isbn):
+        self.isbn = new_isbn
 
-# '''
-# Please, do not change the following code
-# '''
+    def change_price(self, new_price):
+        self.price = new_price
 
-# root = xml.Element('inventory')
-# PROPERTIES = ['author', 'released_date', 'genre', 'age_clasification', 'language', 'isbn', 'price']
+class Library(ReportGeneratorInterface):
+    def __init__(self, report_generator):
+        self.books = []
+        self.report_generator = report_generator
 
-# def clear(user_os):
-# 	if 'Windows' == user_os:
-# 		os.system('cls')
-# 	else:
-# 		os.system('clear')
+    def add_book(self, book):
+        self.books.append(book)
+    
+    def delete_book(self, book):
+        self.books.remove(book)
+    
+    def update_book(self, book):
+        for item in self.books:
+            if book.title == item.title:
+                # print('Book updated')
+                break
+        else:
+            print('Book not found')
 
-# def delete(file_name):
-# 	tree = xml.parse(file_name)
+    def generate(self, books):
+        return super().generate(books)
 
-# 	temp_file = xml.Element('inventory')
-# 	in_user = input('Insert the book title you want to delete >')
+class XMLReportGenerator(ReportGeneratorInterface):
+    def generate(self, books):
+        root = xml.Element('books')
+        for book in books:
+            book_element = xml.Element('book')
+            root.append(book_element)
+            title = xml.SubElement(book_element, 'title')
+            title.text = book.title
+            author = xml.SubElement(book_element, 'author')
+            author.text = book.author
+            released_date = xml.SubElement(book_element, 'released_date')
+            released_date.text = book.released_date.strftime('%Y-%m-%d')
+            genre = xml.SubElement(book_element, 'genre')
+            genre.text = book.genre
+            age_clasification = xml.SubElement(book_element, 'age_clasification')
+            age_clasification.text = book.age_clasification
+            language = xml.SubElement(book_element, 'language')
+            language.text = book.language
+            isbn = xml.SubElement(book_element, 'isbn')
+            isbn.text = book.isbn
+            price = xml.SubElement(book_element, 'price')
+            price.text = str(book.price)
+    
+        tree = xml.ElementTree(root)
+        tree.write('books.xml')
 
-# 	for book in tree.getroot():
-# 		if book.tag != in_user:
-# 			temp_file.append(book)
-# 		else:
-# 			pass
-	
-# 	tree = xml.ElementTree(temp_file)
-# 	tree.write(file_name)
-			
-# def update(file_name):
-# 	def change_values(element):
-# 		print('Change:'+
-# 			"\n\t1 - Book's title"+
-# 			'\n\t2 - Author'+
-# 			'\n\t3 - Date of release'+
-# 			'\n\t4 - Genre'+
-# 			'\n\t5 - Age clasification'+
-# 			'\n\t6 - Language'+
-# 			'\n\t7 - ISBN'+
-# 			'\n\t8 - Price'+
-# 			'\n[Enter] to cancel the operation')
-		
-# 		in_user = input('>')
-		
-# 		if '1' == in_user:
-# 			element.tag = input('Insert new title >')
-# 			return element
-# 		elif '2' == in_user:
-# 			element[0].text = input('Insert new author >')
-# 			return element
-# 		elif '3' == in_user:
-# 			for date in element[1]:
-# 				date.text = input(f'Insert new {date.tag} >')
-# 			return element
-# 		elif '4' == in_user:
-# 			element[2].text = input('Insert new genre >')
-# 			return element
-# 		elif '5' == in_user:
-# 			element[3].text = input('Insert new age classification >')
-# 			return element
-# 		elif '6' == in_user:
-# 			element[4].text = input('Insert new language >')
-# 			return element
-# 		elif '7' == in_user:
-# 			element[5].text = input('Insert new ISBN >')
-# 			return element
-# 		elif '8' == in_user:
-# 			element[6].text = input('Insert new price >')
-# 		else:
-# 			return element
+def main():
+    while True:
+        print('1. Add book')
+        print('2. Delete book')
+        print('3. Update book')
+        print('4. Generate report')
+        print('[q] for quit\n')
+        user_input = input('Choose an option: ')
+        
+        if '1' == user_input:
+            pass
 
-# 	tree = xml.parse(file_name)
+        elif '2' == user_input:
+            pass
 
+        elif '3' == user_input:
+            pass
 
-# 	temp_file = xml.Element('inventory')
-# 	in_user = input('Insert the book title you want to update >')
+        elif '4' == user_input:
+            pass
 
-# 	for book in tree.getroot():
-# 		if book.tag == in_user:
-# 			temp_file.append(change_values(book))
-# 		else:
-# 			temp_file.append(book)
-	
-# 	tree = xml.ElementTree(temp_file)
-# 	tree.write(file_name)
-		
-# def show(file_name):
-	
-# 	def show_all():
-
-# 		tree = xml.parse(file_name)
-		
-		
-# 		print('All books:')
-# 		for book in tree.getroot():
-# 			print(f'\t- {book.tag}')
-		
-# 	def show_all_properties():
-# 		tree = xml.parse(file_name)
-# 		in_user = input('Insert the book that you want to see its properties>')
-	
-# 		for book in tree.getroot():
-# 			if book.tag == in_user:
-# 				for property in book:
-# 					# Only for the released date
-# 					if book[1] == property:
-# 						for date in property:
-# 							print(f'\t{date.tag}: {date.text}')
-# 					else:
-# 						print(f'\t{property.tag}: {property.text}')
-# 			else:
-# 				pass
-
-# 	def show_one_property():
-# 		tree = xml.parse(file_name)
-# 		in_user = input('Insert the book that you want to see its property >')
-
-# 		for book in tree.getroot():
-# 			if book.tag == in_user:
-# 				# Menu
-# 				print('All properties:')
-# 				for property in PROPERTIES:
-# 					print(f'\t-{property}')
-# 				in_user = input('Insert which option you want to see >')
-				
-# 				for property in book:
-# 					if property.tag == in_user:
-# 						# Only for the released date
-# 						if book[1] == property:
-# 							for date in property:
-# 								print(f'\t{date.tag}: {date.text}')
-# 						else:
-# 							print(f'\t{property.tag}: {property.text}')
-# 			else:
-# 				pass
-	
-
-# 	clear(user_os)
-# 	print('Options:'+
-# 			'\n\t1 - All books'+
-# 			'\n\t2 - Show all the information of a book'+
-# 			'\n\t3 - Show a property of a book '+
-# 			'\n[Enter] to cancel the operation')
-# 	in_user = input('>')
-
-# 	if '1' == in_user:
-# 		show_all()
-# 	elif '2' == in_user:
-# 		show_all_properties()
-# 	elif '3' == in_user:
-# 		show_one_property()
-# 	else:
-# 		pass
-
-# def calculate(file_name):
-# 	def all_revenue():
-# 		tree = xml.parse(file_name)
-# 		all_revenue = 0
-		
-# 		for book in tree.getroot():
-# 			try:
-# 				all_revenue += float(book[6].text)
-# 			except:
-# 				pass
-
-# 		print(f"The total inventory's revenue is: {all_revenue}")
-	
-# 	def years_passed():
-# 		tree = xml.parse(file_name)
-# 		actual_year = 2024
-		
-# 		in_user = input('Insert which book you want to calculate its years >')
-
-# 		for book in tree.getroot():
-# 			if book.tag == in_user:
-# 				for property in book:
-# 					if book[1] == property:
-# 						for date in property:
-# 							if 'released_year' == date.tag:
-# 								print(f'The book {book.tag} is {actual_year - int(date.text)} years old')
-# 							else:
-# 								pass
-# 					else:
-# 						pass
-
-# 	def price_amount_books():
-# 		tree = xml.parse(file_name)
-# 		total_price = 0
-# 		amount_books = []
-		
-# 		in_user = ''
-
-# 		while in_user.lower() != 'q':
-# 			in_user = input('Insert which books you want to sum its price [q for exit]>')
-# 			amount_books.append(in_user)
-		
-# 		for book in tree.findall('inventory'):
-# 			print(book.tag)
-# 			if book.tag in amount_books:
-# 				total_price += float(book[6].text)
-# 			else:
-# 				pass
-		
-# 		print(f'Total price: {total_price}')
-	
-# 	tree = xml.parse(file_name)
-# 	clear(user_os)
-	
-# 	print('Options:'+
-# 			'\n\t1 - Calculates how many years has passed since released'+
-# 			'\n[Enter] to cancel the operation')
-# 	in_user = input('>')
-	
-# 	if '1' == in_user:
-# 		years_passed()
-# 	else:
-# 		pass
-
-# def add(file_name):
-# 	temp_element = {
-# 		'author': '',
-# 		'released_date': [],
-# 		'genre': '',
-# 		'age_clasification': 0,
-# 		'language': '',
-# 		'isbn': 0,
-# 		'price': 0.0
-# 	}
-	
-# 	child = xml.SubElement(root, input('Insert the book title >'))
-		
-# 	for k in temp_element:
-# 			if list == type(temp_element[k]):
-# 				temp_element[k] = input(f'Insert {k} [day month year]>').split(' ')
-# 			else:
-# 				temp_element[k] = input(f'Insert {k} >')  
-	
-# 	for k, v in temp_element.items():
-# 		if isinstance(v, list):
-# 			index = ['released_day', 'released_month', 'released_year']
-			
-# 			data = xml.SubElement(child, k)
-			
-# 			i = 0
-# 			for item in v:
-# 				xml.SubElement(data, index[i]).text = item
-# 				i += 1
-# 		else:
-# 			xml.SubElement(child, k).text = v
-	
-# 	with open(file_name, 'a', encoding='utf-8'):
-# 					tree = xml.ElementTree(root)
-# 					tree.write(file_name)
+        elif 'q' == user_input.lower():
+            break
+        
+        else:
+            print('Invalid option\n')
+        
 
 
-# def main():
-# 	print("""
-# .___                           __                       
-# |   | _______  __ ____   _____/  |_  ___________ ___.__.
-# |   |/    \  \/ // __ \ /    \   __\/  _ \_  __ <   |  |
-# |   |   |  \   /\  ___/|   |  \  | (  <_> )  | \/\___  |
-# |___|___|  /\_/  \___  >___|  /__|  \____/|__|   / ____|
-# 		 \/          \/     \/                   \/     
-# """)
-	
-# 	input('Press enter to continue >')
-	
-# 	while True:
-# 		clear(user_os)
-# 		print('Menu:'+
-# 			'\n\t1 - Add'+
-# 			'\n\t2 - Update'+
-# 			'\n\t3 - Delete'+
-# 			'\n\t4 - Consult'+
-# 			'\n\t5 - Calculate'+
-# 			'\n[q] for exit the program')
-# 		in_user = input('>')
-		
-# 		if 'q' == in_user.lower():
-# 			print('Exiting program...')
-# 			break
-		
-# 		elif '1' == in_user:
-# 			add(file_name)
-# 			input('Press enter to continue >')
-		
-# 		elif '2' == in_user:
-# 			update(file_name)
-# 			input('Press enter to continue >')
+my_library = Library('xml')
 
-		
-# 		elif '3' == in_user:
-# 			delete(file_name)
-# 			input('Press enter to continue >')
+my_book = Book('The Hobbit', 'J.R.R. Tolkien', datetime.datetime(1937, 9, 21), 'Fantasy', 'PG-13', 'English', '978-3-16-148410-0', 10.99)
+not_my_book = Book('The Pillars of the Earth', 'Ken Follet', datetime.datetime(1989, 10, 2), 'Historical Fiction', 'R', 'English', '978-0-451-16002-6', 9.99)
 
-		
-# 		elif '4' == in_user:
-# 			show(file_name)
-# 			input('Press enter to continue >')
-		
-# 		elif '5' == in_user:
-# 			calculate(file_name)
-# 			input('Press enter to continue >')
-# 		else:
-# 			pass
-
-
-# if __name__ == '__main__':
-# 	main()
+my_library.add_book(my_book)
+my_library.update_book(my_book)
