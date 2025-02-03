@@ -106,6 +106,8 @@ def main():
     root = tree.getroot()
     my_library = Library(XMLReportGenerator())
 
+    XMLReportGenerator().generate(my_library.books, root)
+
     while True:
         print('1. Add book')
         print('2. Delete book')
@@ -136,7 +138,7 @@ def main():
         else:
             print('Invalid option\n')
         
-
+        XMLReportGenerator().generate(my_library.books, root)
 
 my_library = Library('xml')
 
