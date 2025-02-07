@@ -61,9 +61,23 @@ class Library():
                 break
         else:
             print('Book not found')
+    
+    def get_elements(self):
+        tree = xml.parse(file_name)
+
+        for book in tree.getroot():
+            book = Book(book.find('title').text, book.find('author').text, datetime.datetime.strptime(book.find('released_date').text, '%d-%m-%Y'), book.find('genre').text, book.find('age_clasification').text, book.find('language').text, book.find('isbn').text, float(book.find('price').text))
+            self.add_book(book)
+        
 
     # def generate(self, books):
     #     return super().generate(books)
+
+class TerminalReportGenerator(ReportGeneratorInterface):
+    def generate(self, books):
+        print('Books in inventory: ')
+        for book in books:
+            print(f'Title: {book.title}')
 
 class XMLReportGenerator(ReportGeneratorInterface):
     def generate(self, books, root):
@@ -99,11 +113,29 @@ class XMLReportGenerator(ReportGeneratorInterface):
     
         tree = xml.ElementTree(root)
         tree.write(file_name)
+    
+    def delete(self, title_book_to_delete):
+        tree = xml.parse(file_name)
+
+        temp_file = xml.Element('Inventory')
+
+        for book in tree.getroot():
+            if book.tag == title_book_to_delete:
+                print(f'Book {title_book_to_delete} deleted')
+            else:
+                temp_file.append(book)
+        
+        tree = xml.ElementTree(temp_file)
+        tree.write(file_name)
 
 def main():
-
-    tree = xml.parse(file_name)
-    root = tree.getroot()
+    try:
+        tree = xml.parse(file_name)
+        root = tree.getroot()
+        my_library = Library(XMLReportGenerator()).get_elements()
+    
+    except:
+        root = xml.Element('Inventory')
     my_library = Library(XMLReportGenerator())
 
     XMLReportGenerator().generate(my_library.books, root)
@@ -124,7 +156,8 @@ def main():
                 print(f'Invalid input: {e} \n')
 
         elif '2' == user_input:
-            pass
+            title_book_to_delete = input('Title of the book to delete: ')
+            # XMLReportGenerator().delete(title_book_to_delete, root)
 
         elif '3' == user_input:
             pass
