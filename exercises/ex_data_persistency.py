@@ -48,11 +48,17 @@ class Library():
         self.books = []
         self.report_generator = report_generator
 
-    def add_book(self, book):
+    def add_book(self, book:Book):
         self.books.append(book)
     
-    def delete_book(self, book):
-        self.books.remove(book)
+    def delete_book(self, title_book:str):
+        for book in self.books:
+            if title_book == book.title:
+                self.books.remove(book)
+                print(f'Book {title_book} deleted')
+                break
+        else:
+            print('Book not found')
     
     def update_book(self, book):
         for item in self.books:
@@ -67,6 +73,7 @@ class Library():
 
         for book in tree.getroot():
             book = Book(book.find('title').text, book.find('author').text, datetime.datetime.strptime(book.find('released_date').text, '%d-%m-%Y'), book.find('genre').text, book.find('age_clasification').text, book.find('language').text, book.find('isbn').text, float(book.find('price').text))
+            print(book.title)
             self.add_book(book)
         
 
@@ -114,19 +121,19 @@ class XMLReportGenerator(ReportGeneratorInterface):
         tree = xml.ElementTree(root)
         tree.write(file_name)
     
-    def delete(self, title_book_to_delete):
-        tree = xml.parse(file_name)
+    # def delete(self, title_book_to_delete):
+    #     tree = xml.parse(file_name)
 
-        temp_file = xml.Element('Inventory')
+    #     temp_file = xml.Element('Inventory')
 
-        for book in tree.getroot():
-            if book.tag == title_book_to_delete:
-                print(f'Book {title_book_to_delete} deleted')
-            else:
-                temp_file.append(book)
+    #     for book in tree.getroot():
+    #         if book.tag == title_book_to_delete:
+    #             print(f'Book {title_book_to_delete} deleted')
+    #         else:
+    #             temp_file.append(book)
         
-        tree = xml.ElementTree(temp_file)
-        tree.write(file_name)
+    #     tree = xml.ElementTree(temp_file)
+    #     tree.write(file_name)
 
 def main():
     try:
@@ -156,8 +163,8 @@ def main():
                 print(f'Invalid input: {e} \n')
 
         elif '2' == user_input:
-            title_book_to_delete = input('Title of the book to delete: ')
-            # XMLReportGenerator().delete(title_book_to_delete, root)
+            title_book_to_delete = input('Title of the book to delete: ').strip()
+            my_library.delete_book(title_book_to_delete)
 
         elif '3' == user_input:
             pass
