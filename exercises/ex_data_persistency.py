@@ -59,15 +59,21 @@ class Library():
         else:
             print('Book not found')
     
-    def update_book(self, book):
-        for item in self.books:
-            if book.title == item.title:
-                # print('Book updated')
+    def update_book(self, title_book:str):
+        for book in self.books:
+            if title_book == book.title:
+                self.books.remove(book)
+                updated_book = Book(input('Title: '), input('Author: '), datetime.datetime.strptime(input('Release date (dd-mm-yyyy): ').strip(), '%d-%m-%Y'), input('Genre: '), input('Age clasification: '), input('Language: '), input('ISBN: '), float(input('Price: ')))
+                self.books.append(updated_book)
+                print(f'Book {title_book} updated')
                 break
         else:
-            print('Book not found')
+            print(f'Book with title "{title_book}" was not found')
     
     def fetch(self):
+        '''
+        Fetches the data from the xml file and adds it to the library object
+        '''
         tree = xml.parse(file_name)
 
         for book in tree.getroot():
@@ -75,8 +81,6 @@ class Library():
             print(book.title)
             self.add_book(book)
         
-    # def generate(self, books):
-    #     return super().generate(books)
 
 class TerminalReportGenerator(ReportGeneratorInterface):
     def generate(self, books):
@@ -85,11 +89,16 @@ class TerminalReportGenerator(ReportGeneratorInterface):
             print(f'Title: {book.title}')
 
 class XMLReportGenerator(ReportGeneratorInterface):
-    def generate(self, books, root):
+    def generate(self, books:Library, root):
+        '''
+        Adds all the elements inside a library object to the root of an xml file
+        '''
+
         # Deletes all the previous elements in the root that had been previously added to the library object
         for element in list(root):
             root.remove(element)
         
+        # Adds all the elements in the library object to the root
         for book in books:
             book_element = xml.Element('book')
             root.append(book_element)
@@ -136,8 +145,6 @@ def main():
         root = tree.getroot()
         my_library.fetch()
 
-        
-    
     except:
         root = xml.Element('Inventory')
         XMLReportGenerator().generate(my_library.books, root)
@@ -164,7 +171,8 @@ def main():
             my_library.delete_book(title_book_to_delete)
 
         elif '3' == user_input:
-            pass
+            title_book_to_update = input('Title of the book to update: ').strip()
+            my_library.update_book(title_book_to_update)
 
         elif '4' == user_input:
             pass
