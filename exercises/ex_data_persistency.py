@@ -62,8 +62,15 @@ class Library():
     def update_book(self, title_book:str):
         for book in self.books:
             if title_book == book.title:
+                print(f'Insert new data for the book {title_book}')
+                try:
+                    updated_book = Book(input('Title: '), input('Author: '), datetime.datetime.strptime(input('Release date (dd-mm-yyyy): ').strip(), '%d-%m-%Y'), input('Genre: '), input('Age clasification: '), input('Language: '), input('ISBN: '), float(input('Price: ')))
+                
+                except ValueError as e:
+                    print(f'Invalid input: {e} \n')
+                    return None
+                
                 self.books.remove(book)
-                updated_book = Book(input('Title: '), input('Author: '), datetime.datetime.strptime(input('Release date (dd-mm-yyyy): ').strip(), '%d-%m-%Y'), input('Genre: '), input('Age clasification: '), input('Language: '), input('ISBN: '), float(input('Price: ')))
                 self.books.append(updated_book)
                 print(f'Book {title_book} updated')
                 break
