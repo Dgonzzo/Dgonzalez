@@ -44,9 +44,8 @@ class Book():
         self.price = new_price
 
 class Library():
-    def __init__(self, report_generator):
+    def __init__(self):
         self.books = []
-        self.report_generator = report_generator
 
     def add_book(self, book:Book):
         self.books.append(book)
@@ -68,7 +67,7 @@ class Library():
         else:
             print('Book not found')
     
-    def get_elements(self):
+    def fetch(self):
         tree = xml.parse(file_name)
 
         for book in tree.getroot():
@@ -76,7 +75,6 @@ class Library():
             print(book.title)
             self.add_book(book)
         
-
     # def generate(self, books):
     #     return super().generate(books)
 
@@ -88,7 +86,9 @@ class TerminalReportGenerator(ReportGeneratorInterface):
 
 class XMLReportGenerator(ReportGeneratorInterface):
     def generate(self, books, root):
-        # root = xml.Element('books')
+        # Deletes all the previous elements in the root that had been previously added to the library object
+        for element in list(root):
+            root.remove(element)
         
         for book in books:
             book_element = xml.Element('book')
@@ -120,34 +120,31 @@ class XMLReportGenerator(ReportGeneratorInterface):
     
         tree = xml.ElementTree(root)
         tree.write(file_name)
-    
-    # def delete(self, title_book_to_delete):
-    #     tree = xml.parse(file_name)
 
-    #     temp_file = xml.Element('Inventory')
-
-    #     for book in tree.getroot():
-    #         if book.tag == title_book_to_delete:
-    #             print(f'Book {title_book_to_delete} deleted')
-    #         else:
-    #             temp_file.append(book)
-        
-    #     tree = xml.ElementTree(temp_file)
-    #     tree.write(file_name)
 
 def main():
+    def clear():
+        if os.name == 'nt':
+            os.system('cls')
+        else:
+            os.system('clear')
+    
+    my_library = Library()
+    
     try:
         tree = xml.parse(file_name)
         root = tree.getroot()
-        my_library = Library(XMLReportGenerator()).get_elements()
+        my_library.fetch()
+
+        
     
     except:
         root = xml.Element('Inventory')
-    my_library = Library(XMLReportGenerator())
-
-    XMLReportGenerator().generate(my_library.books, root)
+        XMLReportGenerator().generate(my_library.books, root)
 
     while True:
+        clear()
+
         print('1. Add book')
         print('2. Delete book')
         print('3. Update book')
@@ -179,14 +176,6 @@ def main():
             print('Invalid option\n')
         
         XMLReportGenerator().generate(my_library.books, root)
-
-my_library = Library('xml')
-
-my_book = Book('The Hobbit', 'J.R.R. Tolkien', datetime.date(day=27, month=6, year=1937), 'Fantasy', 'PG-13', 'English', '978-3-16-148410-0', 10.99)
-# not_my_book = Book('The Pillars of the Earth', 'Ken Follet', datetime.datetime(2, 10, 1987), 'Historical Fiction', 'R', 'English', '978-0-451-16002-6', 9.99)
-
-my_library.add_book(my_book)
-my_library.update_book(my_book)
 
 if __name__ == '__main__':
     main()
