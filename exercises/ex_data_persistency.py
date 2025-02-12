@@ -49,33 +49,44 @@ class Library():
 
     def add_book(self, book:Book):
         self.books.append(book)
+        # print('Book added')
+        # time.sleep(1)
     
     def delete_book(self, title_book:str):
         for book in self.books:
             if title_book == book.title:
                 self.books.remove(book)
                 print(f'Book {title_book} deleted')
+                time.sleep(1)
                 break
         else:
             print('Book not found')
+            time.sleep(1)
     
     def update_book(self, title_book:str):
         for book in self.books:
             if title_book == book.title:
-                print(f'Insert new data for the book {title_book}')
+                print(f'--- Insert new data for the book {title_book} ---')
                 try:
-                    updated_book = Book(input('Title: '), input('Author: '), datetime.datetime.strptime(input('Release date (dd-mm-yyyy): ').strip(), '%d-%m-%Y'), input('Genre: '), input('Age clasification: '), input('Language: '), input('ISBN: '), float(input('Price: ')))
+                    book.title = input('Title: ')
+                    book.author = input('Author: ')
+                    book.released_date = datetime.datetime.strptime(input('Release date (dd-mm-yyyy): ').strip(), '%d-%m-%Y')
+                    book.genre = input('Genre: ')
+                    book.age_clasification = input('Age clasification: ')
+                    book.language = input('Language: ')
+                    book.isbn = input('ISBN: ')
+                    book.price = float(input('Price: '))
                 
                 except ValueError as e:
                     print(f'Invalid input: {e} \n')
                     return None
                 
-                self.books.remove(book)
-                self.books.append(updated_book)
                 print(f'Book {title_book} updated')
+                time.sleep(1)
                 break
         else:
             print(f'Book with title "{title_book}" was not found')
+            time.sleep(1)
     
     def fetch(self):
         '''
@@ -89,11 +100,51 @@ class Library():
             self.add_book(book)
         
 
-class TerminalReportGenerator(ReportGeneratorInterface):
-    def generate(self, books):
-        print('Books in inventory: ')
-        for book in books:
+class TerminalReportGenerator():
+    def print_all_titles(self, inventory:Library):
+        print('--- All the books ---')
+        already_printed = []
+        for book in inventory.books:
+            if book.title not in already_printed:
+                already_printed.append(book.title)
+                print(book.title)
+            else:
+                pass
+            
+    def print_all_authors(self, inventory:Library):
+        print('--- All the authors ---')
+        already_printed = []
+        for book in inventory.books:
+            if book.author not in already_printed:
+                already_printed.append(book.author)
+                print(book.author)
+            else:
+                pass
+    
+    def print_all_information(self, inventory:Library):
+        for book in inventory.books:
             print(f'Title: {book.title}')
+            print(f'\t Author: {book.author}')
+            print(f'\t Released date: {book.released_date.strftime(f"%d-%m-%Y")}')
+            print(f'\t Genre: {book.genre}')
+            print(f'\t Age clasification: {book.age_clasification}')
+            print(f'\t Language: {book.language}')
+            print(f'\t ISBN: {book.isbn}')
+            print(f'\t Price: {book.price}')
+    
+    def calculate_total_price(self, inventory:Library):
+        total_price = 0
+        for book in inventory.books:
+            total_price += book.price
+        print(f'Total price of the inventory: {round(total_price)}')
+    
+    def calculate_average_price(self, inventory:Library):
+        total_price = 0
+        for book in inventory.books:
+            total_price += book.price
+        average_price = total_price / len(inventory.books)
+        print(f'Average price of the inventory: {round(average_price)}')
+    
 
 class XMLReportGenerator(ReportGeneratorInterface):
     def generate(self, books:Library, root):
@@ -158,7 +209,7 @@ def main():
 
     while True:
         clear()
-
+        print('--- Library management system ---')
         print('1. Add book')
         print('2. Delete book')
         print('3. Update book')
@@ -182,7 +233,44 @@ def main():
             my_library.update_book(title_book_to_update)
 
         elif '4' == user_input:
-            pass
+            clear()
+            print('Loading report menu...')
+            time.sleep(2)
+            clear()
+            
+            print('--- Report menu ---')
+            print('1. Show all the titles')
+            print('2. Show all the information')
+            print('3. Show all the authors')
+            print('4. Show total price of the inventory')
+            print('5. Show average price of the inventory')
+            print('[Any other key] for exit menu')
+            user_input = input('Choose an option: ')
+
+            if '1' == user_input: 
+                TerminalReportGenerator().print_all_titles(my_library)
+                input('Press any key to continue: ')
+            
+            elif '2' == user_input:
+                TerminalReportGenerator().print_all_information(my_library)
+                input('Press any key to continue: ')
+            
+            elif '3' == user_input:
+                TerminalReportGenerator().print_all_authors(my_library)
+                input('Press any key to continue: ')
+
+            elif '4' == user_input:
+                TerminalReportGenerator().calculate_total_price(my_library)
+                input('Press any key to continue: ')
+            
+            elif '5' == user_input:
+                TerminalReportGenerator().calculate_average_price(my_library)
+                input('Press any key to continue: ')
+
+            else:
+                pass
+
+            
 
         elif 'q' == user_input.lower():
             break
