@@ -1,3 +1,6 @@
+def show_message(message):
+    print(message)
+
 def show_products(products):
     print('Products:')
     for product in products:
