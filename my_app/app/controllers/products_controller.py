@@ -1,9 +1,9 @@
 from app.models import Product
 from app.views import show_menu, show_products, ask_info, show_message
-from app.services import get_all, insert_product
+from app.services import get_products, insert_product
 
 def configure_app():
-    Product.all_products = get_all()
+    Product.all_products = get_products()
 
 def product_manager():
     while True:
