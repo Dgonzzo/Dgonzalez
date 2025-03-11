@@ -13,14 +13,25 @@ def get_products():
     return results
 
 
-def insert_product(id, name, price):
+def insert_product(name, price):
     conn = get_DBconnection()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO products (id, name, price)
-        VALUES (?, ?, ?)
-    ''', (id, name, price))
+        INSERT INTO products (name, price)
+        VALUES (?, ?)
+    ''', (name, price))
+    conn.commit()
+    conn.close()
 
+def delete_product(id):
+    conn = get_DBconnection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        DELETE FROM products
+        WHERE id = ?
+    ''', (id,))
+    conn.commit()
+    conn.close()
 
 
 
