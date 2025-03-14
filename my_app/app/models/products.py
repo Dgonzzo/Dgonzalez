@@ -2,7 +2,6 @@ class Product:
     all_products = []
 
     def __init__(self, name, price):
-        self.id = -1
         self.name = name
         self.price = price
     
@@ -13,6 +12,10 @@ class Product:
     @classmethod
     def insert_product(cls, product):
         cls.all_products.append(product)
+
+    @classmethod
+    def delete_product(cls, id_product):
+        cls.all_products.remove(id_product)
 
     def __str__(self):
         return self.name

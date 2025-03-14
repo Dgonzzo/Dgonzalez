@@ -9,7 +9,10 @@ def show_products(products):
 def ask_info():
     name = input('Product name: ')
     price = float(input('Product price: '))
-    return name, price
+    return name, price 
+
+def ask_id():
+    return input('Product id: ')
 
 def show_menu():
     print('---- MENU ----')

@@ -29,7 +29,7 @@ def delete_product(id):
     cursor.execute('''
         DELETE FROM products
         WHERE id = ?
-    ''', (id,))
+    ''', (id))
     conn.commit()
     conn.close()
 
@@ -47,4 +47,7 @@ Add to DB:
     INSERT INTO ___ -> table (col1, col2, col3, ...)
     VALUES ___    -> (value1, value2, value3, ...)
 
+Delete to DB:
+    DELETE FROM ___ -> table
+    WHERE ___ -> condition to filter the results
 '''
