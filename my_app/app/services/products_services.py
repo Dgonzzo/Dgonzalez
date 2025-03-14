@@ -33,6 +33,18 @@ def delete_product(id):
     conn.commit()
     conn.close()
 
+def get_last_id():
+    conn = get_DBconnection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT LIMIT 1 id
+        FROM products
+        ORDER BY id DESC
+    ''')
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
 
 
 '''

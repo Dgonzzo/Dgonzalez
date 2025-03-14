@@ -1,22 +1,26 @@
 from app.models import Product
 from app.views import show_menu, show_products, ask_info, show_message, ask_id
-from app.services import get_products, insert_product, delete_product
+from app.services import get_products, insert_product, delete_product, get_last_id
 
 def configure_app():
-    Product.all_products = get_products()
+    for element in get_products():
+        Product.all_products.append(Product(*element))
+    
+    Product.update_new_ident(get_last_id())
 
 def product_manager():
     while True:
         option = show_menu()
 
         if 1 == option:
-            product = Product.get_all()
-            show_products(product)
+            products = Product.get_all()
+            print(products)
+            show_products(products)
         
         elif 2  == option:
             name, price = ask_info()
             
-            product = Product(name, price)
+            product = Product(Product.get_new_ident, name, price)
 
             Product.insert_product(product) # Inserts at the classmethod
             insert_product(product.name, product.price) # Inserts in DB
@@ -33,8 +37,6 @@ def product_manager():
             Product.delete_product(id)
             
             delete_product(id)
-
-            
 
             show_message('Product deleted')
 

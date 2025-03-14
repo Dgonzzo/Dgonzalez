@@ -4,7 +4,7 @@ def show_message(message):
 def show_products(products):
     print('Products:')
     for product in products:
-        print(f' - {product[0]} {product[1]}')
+        print(product)
 
 def ask_info():
     name = input('Product name: ')
