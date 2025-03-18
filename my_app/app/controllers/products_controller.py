@@ -6,7 +6,7 @@ def configure_app():
     for element in get_products():
         Product.all_products.append(Product(*element))
     
-    Product.update_new_ident(get_last_id())
+    Product.update_new_ident(get_last_id()[0])
 
 def product_manager():
     while True:
@@ -14,13 +14,13 @@ def product_manager():
 
         if 1 == option:
             products = Product.get_all()
-            print(products)
             show_products(products)
         
         elif 2  == option:
             name, price = ask_info()
             
-            product = Product(Product.get_new_ident, name, price)
+            # Product.print_x() Debugging function
+            product = Product(Product.get_new_ident(), name, price)
 
             Product.insert_product(product) # Inserts at the classmethod
             insert_product(product.name, product.price) # Inserts in DB
